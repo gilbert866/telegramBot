@@ -6,6 +6,11 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN")
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
+@bot.message_handler(commands=["start", "hello"])
+def send_welcome(message):
+    bot.reply_to(message, "Howdy, how are you doing?")
+
+
 def get_daily_horoscope(sign: str, day: str) -> dict:
     """Get daily horoscope for a specific sign.
     Keyword arguments:
@@ -41,6 +46,11 @@ def fetch_horoscope(message, sign):
     horoscope_message = f'*Horoscope:* {data["horoscope_data"]}\\n*Sign:* {sign}\\n*Day:* {data["date"]}'
     bot.send_message(message.chat.id, "Here's your horoscope!")
     bot.send_message(message.chat.id, horoscope_message, parse_mode="Markdown")
+
+
+@bot.message_handler(func=lambda msg: True)
+def echo_all(message):
+    bot.reply_to(message, message.text)
 
 
 bot.infinity_polling()
